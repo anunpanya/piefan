@@ -1,0 +1,82 @@
+<script src="https://netpie.io/microgear.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<script>
+	const target = 'piefan';
+
+    var appid, appkey, appsecret;
+	var thingsrc;
+
+    var a = location.hash.substring(1).split(':');
+    if (a.length==3) {
+        appid = a[0];
+        appkey = a[1];
+        appsecret = a[2];
+    }
+    else {
+        alert("Please inclde APPID:APPKEY:APPSECRET as a url hash e.g. :\n\n index.html#APPID:APPKEY:APPSECRET");            
+    }
+    
+    var microgear = Microgear.create({
+        key: appkey,
+        secret: appsecret,
+        alias : "fanconsole"
+    });
+
+  	function send(msg) {
+		document.getElementById("speed").innerHTML = msg;
+		microgear.chat(target,msg);
+	}
+
+	microgear.on('message',function(topic,msg) {
+		console.log(topic,msg);
+		if (topic.indexOf('/piefan/state')>=0) {
+			document.getElementById("speed").innerHTML = msg;
+		}
+	});
+
+	microgear.on('connected', function() {
+		microgear.subscribe('/piefan/state');
+	    document.getElementById("data").innerHTML = "<FONT color=#00BB00>ONLINE</FONT>";
+	});
+
+	microgear.connect(appid);
+
+</script>
+
+ <style>
+
+a { text-decoration: none; cursor:pointer;}
+.btn-primary, .btn-success {
+    padding: 15px;
+}
+.dropdown, .btn, button, li {
+	font-size:56px;
+}
+#body {
+	padding:10px;
+	text-align:center;
+}
+
+</style>
+
+<div id="body">
+	<div id="data" align="right"><FONT COLOR=#DDDDDD>OFFLINE</FONT></div>
+	<font style="font-size: 56px;font-weight: bold;">NETPIE<br>FAN CONTORLLER</font>
+	<div class="row" style="font-size: 72px;font-weight: bold;padding:10px;" id="speed">0</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('0')">0</a></div>
+		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('1')">1</a></div>
+		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('2')">2</a></div>
+		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('3')">3</a></div>
+	</div>
+</div>
