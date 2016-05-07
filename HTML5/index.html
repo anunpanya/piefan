@@ -34,7 +34,7 @@
 
   	function send(msg) {
 		document.getElementById("speed").innerHTML = msg;
-		microgear.chat(target,msg);
+		microgear.chat(target,"SP"+msg);
 	}
 
 	microgear.on('message',function(topic,msg) {
