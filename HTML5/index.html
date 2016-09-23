@@ -16,7 +16,7 @@
     var appid, appkey, appsecret;
 	var thingsrc;
 
-    var a = location.hash.substring(1).split(':');
+    var a = location.hash.substring(1).split(':'); //ตัดสตริง hash ต่อท้าย url APPID, KEY, SECRET
     if (a.length==3) {
         appid = a[0];
         appkey = a[1];
@@ -26,30 +26,30 @@
         alert("Please inclde APPID:APPKEY:APPSECRET as a url hash e.g. :\n\n index.html#APPID:APPKEY:APPSECRET");            
     }
     
-    var microgear = Microgear.create({
+    var microgear = Microgear.create({ //สร้าง object microgear
         key: appkey,
         secret: appsecret,
         alias : "fanconsole"
     });
 
   	function send(msg) {
-		document.getElementById("speed").innerHTML = msg;
-		microgear.chat(target,msg);
+		//document.getElementById("speed").innerHTML = msg;
+		microgear.chat(target,msg); //ส่งคำสั่งไปยัง piefan
 	}
 
 	microgear.on('message',function(topic,msg) {
-		console.log(topic,msg);
-		if (topic.indexOf('/piefan/state')>=0) {
-			document.getElementById("speed").innerHTML = msg;
+		//console.log(topic,msg);
+		if (topic.indexOf('/piefan/state')>=0) { //เงื่อนไขการตรวจสอบ ต้องเป็น topic /piefan/state เท่านั้น
+			document.getElementById("speed").innerHTML = msg; //แสดงสถานะการทำงาน เมื่อมีข้อความตอบกลับจาก piefan
 		}
 	});
 
 	microgear.on('connected', function() {
-		microgear.subscribe('/piefan/state');
-	    document.getElementById("data").innerHTML = "<FONT color=#00BB00>ONLINE</FONT>";
+		microgear.subscribe('/piefan/state'); // subscribe เพื่อรับข้อมูลเฉพาะ topic /<APPID>/piefan/state
+	    document.getElementById("data").innerHTML = "<FONT color=#00BB00>ONLINE</FONT>"; // แสดงข้อความออนไลน์
 	});
 
-	microgear.connect(appid);
+	microgear.connect(appid); // เชื่อมต่อ netpie
 
 </script>
 
@@ -74,9 +74,9 @@ a { text-decoration: none; cursor:pointer;}
 	<font style="font-size: 56px;font-weight: bold;">NETPIE<br>FAN CONTORLLER</font>
 	<div class="row" style="font-size: 72px;font-weight: bold;padding:10px;" id="speed">0</div>
 	<div class="row">
-		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('0')">0</a></div>
-		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('1')">1</a></div>
-		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('2')">2</a></div>
-		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('3')">3</a></div>
+		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('0')">0</a></div> <!-- Turn OFF -->
+		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('1')">1</a></div> <!-- Turn ON Speed 1 -->
+		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('2')">2</a></div> <!-- Turn ON Speed 2 -->
+		<div class="col-xs-12 col-md-3" style="padding:10px;"><a class="btn btn-primary col-xs-12" onclick="send('3')">3</a></div> <!-- Turn ON Speed 3 -->
 	</div>
 </div>
